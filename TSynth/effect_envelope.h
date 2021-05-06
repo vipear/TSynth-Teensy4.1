@@ -37,6 +37,15 @@
 // EXP_0 has a linear attack.
 #define NUM_ENV_TYPES 18 // Linear, Exp -8 through Exp +8
 
+// Precalculate these filter constants
+// These are used to allow fast sustain control change with long decay values.
+#define FAST_SUSTAIN_KF 0.999773268 // 100 ms
+//#define FAST_SUSTAIN_KF 0.999886627 // 200 ms
+//#define FAST_SUSTAIN_KF 0.999943312 // 400 ms
+//#define FAST_SUSTAIN_KF 0.999971655 // 800 ms
+#define FAST_SUSTAIN_K1 (uint32_t)(FAST_SUSTAIN_KF*EXP_ENV_ONE)
+#define FAST_SUSTAIN_K2 (1.0-FAST_SUSTAIN_KF)
+
 // The exponential difference equations are based on the impulse invariant method. 
 // The equation used for attack is k1 = exp(curveFactor*Ts/To) and k2=(k1-1)/((e^curveFactor)-1)
 // and ynew = k1*yold+k2 (normalized).
@@ -107,6 +116,11 @@ public:
 		sustain_mult = level * 1073741824.0;
     sustain_target=level*EXP_ENV_ONE; // max level is 0x80000000 for exp, 0x40000000 for lin.
     updateExpDecay(); // Change in sustain requires recalulation of decay target
+    // Change of sustain level while in decay or regular sustain state forces state change so sustain changes occur more quickly.
+    __disable_irq();
+    if(state==STATE_DECAY || state==STATE_SUSTAIN)
+      state=STATE_SUSTAIN_FAST_CHANGE;
+    __enable_irq();
 	}
 	FLASHMEM void release(float milliseconds) {
 		release_count = milliseconds2count(milliseconds);
@@ -204,6 +218,7 @@ private:
     STATE_HOLD,
     STATE_DECAY,
     STATE_SUSTAIN,
+    STATE_SUSTAIN_FAST_CHANGE,
     STATE_RELEASE,
     STATE_FORCED,
     STATE_IDLE_NEXT,  // Not used for original linear envelope.
