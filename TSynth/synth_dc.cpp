@@ -130,8 +130,8 @@ void AudioSynthWaveformDcTS::update(void)
     ysum=ysum+(int64_t)kg*(target-magnitude);
     magnitude=ysum>>32;
     t4 = pack_16t_16t(magnitude, t4);
-    Serial.print("In interrupt ");
-    Serial.println(magnitude,HEX);
+//    Serial.print("In interrupt ");
+//   Serial.println(magnitude,HEX);
     *p++ = t1;
     *p++ = t2;
     *p++ = t3;

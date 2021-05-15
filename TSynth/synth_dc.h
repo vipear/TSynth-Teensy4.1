@@ -99,8 +99,8 @@ public:
     ysum=(int64_t)m<<32;
 		state = 0;
 		__enable_irq();
-   Serial.print("Set amplitude\t");
-   Serial.println(magnitude,HEX);
+//   Serial.print("Set amplitude\t");
+//  Serial.println(magnitude,HEX);
 	}
 	// slowly transition to the new DC level
 	FLASHMEM void amplitude(float n, float milliseconds) {
@@ -118,11 +118,11 @@ public:
     ysum=(int64_t)magnitude<<32;
 		int32_t t = (int32_t)(n * 2147418112.0f);
     int32_t k=(0x80000000UL)*(1.0f-exp(-2.0f/(milliseconds*AUDIO_SAMPLE_RATE_EXACT/1000.0f)));
-    Serial.print(k,HEX);
-    Serial.print("\t");
-    Serial.print(n);
-    Serial.print("\tMagnitude");
-    Serial.print(magnitude,HEX);
+//    Serial.print(k,HEX);
+//    Serial.print("\t");
+//    Serial.print(n);
+//    Serial.print("\tMagnitude");
+//    Serial.print(magnitude,HEX);
 		__disable_irq();
 		target = t;
     kg=k;
@@ -136,7 +136,7 @@ public:
 		if (increment == 0) {
 			increment = (target > magnitude) ? 1 : -1;
 		}
-   Serial.println("\tState=1");
+//   Serial.println("\tState=1");
 		state = 1;
 		__enable_irq();
 	}
