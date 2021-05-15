@@ -1640,5 +1640,5 @@ void loop() {
   checkMux();
   checkSwitches();
   checkEncoder();
-  CPUMonitor();
+  //CPUMonitor();
 }
