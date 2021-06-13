@@ -40,6 +40,9 @@
 
 void AudioEffectEnvelopeTS::noteOn(void)
 {
+  Serial.print("Note On: ");
+  printState();
+  Serial.print("\n");
   __disable_irq();
   if(release_forced_count==0)
     state=STATE_IDLE;
@@ -58,7 +61,7 @@ void AudioEffectEnvelopeTS::noteOn(void)
       {
         state=STATE_ATTACK;
         count=attack_count;
-        inc_hires=0x40000000;
+        inc_hires=0x40000000/(int32_t)count;
       }
       break;    
     case STATE_DELAY:
@@ -82,6 +85,9 @@ void AudioEffectEnvelopeTS::noteOn(void)
 
 void AudioEffectEnvelopeTS::noteOff(void)
 {
+  Serial.print("    Note Off: ");
+  printState();
+  Serial.print("\n");
   __disable_irq();
   switch(state)
   {

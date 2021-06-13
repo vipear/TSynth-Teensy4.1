@@ -105,8 +105,8 @@ public:
  
   FLASHMEM void attack(float milliseconds) {
     attack_count = milliseconds2count(milliseconds);
+    if(attack_count==0) attack_count=1;
     updateExpAttack();
-    
   }
   FLASHMEM void hold(float milliseconds) {
     hold_count = milliseconds2count(milliseconds);
@@ -239,6 +239,23 @@ private:
   int32_t decay_k;
   int32_t release_k;
   int32_t release_forced_k;
+  void printState()
+  {
+    switch(state)
+    {
+      case STATE_IDLE: Serial.print("IDLE "); break;
+      case STATE_DELAY: Serial.print("DELAY "); break;
+      case STATE_ATTACK: Serial.print("ATTACK "); break;
+      case STATE_HOLD: Serial.print("HOLD "); break;
+      case STATE_DECAY: Serial.print("DECAY "); break;
+      case STATE_SUSTAIN: Serial.print("SUSTAIN "); break;
+      case STATE_SUSTAIN_FAST_CHANGE: Serial.print("SUSTAIN FAST CHANGE "); break;
+      case STATE_RELEASE: Serial.print("RELEASE "); break;
+      case STATE_FORCED: Serial.print("FORCED "); break;
+      case STATE_IDLE_NEXT: Serial.print("IDLE NEXT "); break;
+      default: Serial.print("Unknown"); break;
+    }
+  }
 };
 
 #undef SAMPLES_PER_MSEC
